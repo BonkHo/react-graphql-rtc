@@ -6,7 +6,7 @@ import {
     gql,
     useQuery,
 } from "@apollo/client";
-import { Container } from "shards-react";
+import { Container, Row, Col, FormInput, Button } from "shards-react";
 
 const client = new ApolloClient({
     uri: "http://localhost:4000/",
@@ -40,6 +40,22 @@ const Messages = ({ user }) => {
                         paddingBottom: "1em",
                     }}
                 >
+                    {user !== messageUser && (
+                        <div
+                            style={{
+                                height: 50,
+                                width: 50,
+                                marginRight: "0.5em",
+                                border: "2px solid #e5e6ea",
+                                borderRadius: 25,
+                                textAlign: "center",
+                                fontSize: "18pt",
+                                paddingTop: 5,
+                            }}
+                        >
+                            {messageUser.slice(0, 2).toUpperCase()}
+                        </div>
+                    )}
                     <div
                         style={{
                             background:
@@ -59,9 +75,33 @@ const Messages = ({ user }) => {
 };
 
 const Chat = () => {
+    const [state, stateSet] = React.useState({
+        user: "John",
+        content: "",
+    });
     return (
         <Container>
-            <Messages user="James" />
+            <Messages user={state.user} />
+            <Row>
+                <Col xs={2} style={{ padding: 0 }}>
+                    <FormInput
+                        label="User"
+                        value={state.user}
+                        onChange={(e) =>
+                            stateSet({ ...state, user: e.target.value })
+                        }
+                    />
+                </Col>
+                <Col xs={8}>
+                    <FormInput
+                        label="Content"
+                        value={state.content}
+                        onChange={(e) =>
+                            stateSet({ ...state, user: e.target.value })
+                        }
+                    />
+                </Col>
+            </Row>
         </Container>
     );
 };

@@ -5,6 +5,7 @@ import {
     ApolloProvider,
     gql,
     useQuery,
+    useMutation,
 } from "@apollo/client";
 import { Container, Row, Col, FormInput, Button } from "shards-react";
 
@@ -13,7 +14,7 @@ const client = new ApolloClient({
     cache: new InMemoryCache(),
 });
 
-const getMessages = gql`
+const GET_MESSAGES = gql`
     query {
         messages {
             id
@@ -23,8 +24,14 @@ const getMessages = gql`
     }
 `;
 
+const POST_MESSAGES = gql`
+    mutation ($user: String!, $content: String!) {
+        postMessage(user: $user, content: $content)
+    }
+`;
+
 const Messages = ({ user }) => {
-    const { data } = useQuery(getMessages);
+    const { data } = useQuery(GET_MESSAGES);
     if (!data) {
         return null;
     }
@@ -79,6 +86,17 @@ const Chat = () => {
         user: "John",
         content: "",
     });
+
+    const [postMessage] = useMutation(POST_MESSAGES);
+
+    const onSend = () => {
+        if (state.content.length > 0) {
+            postMessage({
+                variables: state,
+            });
+        }
+    };
+
     return (
         <Container>
             <Messages user={state.user} />
@@ -97,9 +115,18 @@ const Chat = () => {
                         label="Content"
                         value={state.content}
                         onChange={(e) =>
-                            stateSet({ ...state, user: e.target.value })
+                            stateSet({ ...state, content: e.target.value })
                         }
+                        on
+                        keyUp={(e) => {
+                            if (e.keyCode === 13) {
+                                onSend();
+                            }
+                        }}
                     />
+                </Col>
+                <Col xs={2} style={{ padding: 0 }} onClick={() => onSend()}>
+                    <Button>Send Message</Button>
                 </Col>
             </Row>
         </Container>

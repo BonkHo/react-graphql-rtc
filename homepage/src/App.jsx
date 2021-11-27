@@ -7,11 +7,13 @@ import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 
+import Chat from "chat/Chat";
+
 const App = () => (
     <Container>
         <p>Top Bar</p>
         <h1>Chat</h1>
-        <div>Chat Window</div>
+        <Chat />
         <p>Bottom Bar</p>
     </Container>
 );

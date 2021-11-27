@@ -41,8 +41,9 @@ module.exports = {
     plugins: [
         new ModuleFederationPlugin({
             name: "home",
+            library: { type: "var", name: "homepage" },
             filename: "remoteEntry.js",
-            remotes: {},
+            remotes: { chat: "chat" },
             exposes: {},
             shared: {
                 ...deps,
